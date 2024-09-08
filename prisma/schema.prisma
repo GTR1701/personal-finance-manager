@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model expenses {
+  id     Int      @id @default(autoincrement())
+  name   String
+  amount Float
+  typeId Int
+  date   DateTime @default(now())
+  userId String
+  types  types    @relation(fields: [typeId], references: [id], map: "Expenses_typeId_fkey")
+  user   user     @relation(fields: [userId], references: [id], map: "Expenses_userId_fkey")
+
+  @@index([typeId], map: "Expenses_typeId_fkey")
+  @@index([userId], map: "Expenses_userId_fkey")
+}
+
+model income {
+  id     Int      @id @default(autoincrement())
+  name   String
+  amount Float
+  typeId Int
+  date   DateTime @default(now())
+  userId String
+  types  types    @relation(fields: [typeId], references: [id], map: "Income_typeId_fkey")
+  user   user     @relation(fields: [userId], references: [id], map: "Income_userId_fkey")
+
+  @@index([typeId], map: "Income_typeId_fkey")
+  @@index([userId], map: "Income_userId_fkey")
+}
+
+model types {
+  id       Int        @id @default(autoincrement())
+  name     String
+  expenses expenses[]
+  income   income[]
+}
+
+model user {
+  id       String     @id 
+  username String     @unique(map: "User_username_key")
+  password String
+  expenses expenses[]
+  income   income[]
+}
