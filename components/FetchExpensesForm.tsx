@@ -30,6 +30,7 @@ import { Filter } from "lucide-react";
 import { types } from "@prisma/client";
 import { filterExpenses } from "@/actions/filterExpenses";
 import { useDataTableStore } from "@/store/useDataTableStore";
+import { useState } from "react";
 
 type FetchExpensesFormProps = {
 	transactionTypes: types[];
@@ -47,6 +48,8 @@ const FetchExpensesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>)
             },
 		},
 	});
+
+	const [open, setOpen] = useState(false)
 
 	const { setDataTableStore } = useDataTableStore();
 
@@ -85,7 +88,7 @@ const FetchExpensesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>)
 					name="type"
 					render={({ field }) => (
 						<FormItem>
-							<Popover>
+							<Popover open={open} onOpenChange={setOpen}>
 								<PopoverTrigger asChild>
 									<FormControl>
 										<Button
@@ -128,6 +131,7 @@ const FetchExpensesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>)
 																"type",
 																transactionType.name
 															);
+															setOpen(false)
 														}}
 													>
 														{transactionType.name}

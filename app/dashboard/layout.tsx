@@ -86,7 +86,7 @@ export default function DashboardLayout({
 									<ArrowRight className="my-4 w-5 h-5 antialiased" />
 								</div>
 							</Link>
-							<Link href="/dashboard/expenses/add">
+							<Link href="/dashboard/incomes/add">
 								<div className="flex flex-row gap-2 w-fit ml-3 selection:bg-none hover:text-primary transition">
 									<Euro className="my-4 w-5 h-5 antialiased" />
 									<Plus className="my-4 -ml-3 w-5 h-5 antialiased" />

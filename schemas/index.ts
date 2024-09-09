@@ -21,3 +21,9 @@ export const TransactionDataTableSchema = z.object({
     amount: z.number(),
     date: z.date()
 })
+
+export const AddExpenseFormSchema = z.object({
+    name: z.string().min(1, {message: 'Wymagany tytuł transakcji'}),
+    type: z.string().min(1, {message: 'Wymagany typ transakcji'}),
+    amount: z.number().min(0.01, {message: 'Wymagana kwota transakcji'}),
+})

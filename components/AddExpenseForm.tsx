@@ -1,6 +1,6 @@
 "use client";
 
-import { FetchExpensesFormSchema } from "@/schemas";
+import { AddExpenseFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,7 +15,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
 	Command,
 	CommandEmpty,
@@ -24,39 +24,44 @@ import {
 	CommandItem,
 	CommandList,
 } from "./ui/command";
-import { Calendar } from "./ui/calendar";
-import { format } from "date-fns";
-import { Filter } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { types } from "@prisma/client";
-import { useDataTableStore } from "@/store/useDataTableStore";
-import { FilterIncomes } from "@/actions/filterIncomes";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
+import createExpense from "@/actions/addExpense";
 
-type FetchExpensesFormProps = {
+type AddExpenseFormProps = {
 	transactionTypes: types[];
 };
 
-const FetchIncomesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>) => {
-	const form = useForm<z.infer<typeof FetchExpensesFormSchema>>({
-		resolver: zodResolver(FetchExpensesFormSchema),
+const AddExpenseForm = ({transactionTypes}: Readonly<AddExpenseFormProps>) => {
+	const form = useForm<z.infer<typeof AddExpenseFormSchema>>({
+		resolver: zodResolver(AddExpenseFormSchema),
 		defaultValues: {
 			name: "",
 			type: "",
-			date: {
-                from: undefined,
-                to: undefined
-            },
+            amount: 0,
 		},
 	});
 
-	const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
+    const router = useRouter()
+    const user = getCookie("currentUser")
 
-	const { setDataTableStore } = useDataTableStore();
-
-	const onSubmit = async (data: z.infer<typeof FetchExpensesFormSchema>) => {
-		const filteredResponse = await FilterIncomes(data);
-		setDataTableStore(filteredResponse);
-	};
+	const onSubmit = async (data: z.infer<typeof AddExpenseFormSchema>) => {
+        console.log(data)
+        const createdAt = new Date()
+        const payload = {
+            name: data.name,
+            amount: data.amount,
+            type: data.type,
+            date: createdAt,
+            userId: user.valueOf()
+        }
+        await createExpense(payload)
+        router.push("/dashboard/expenses")
+    	};
 
 	return (
 		<Form {...form}>
@@ -75,7 +80,7 @@ const FetchIncomesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>) 
 								<Input
 									placeholder="Tytuł"
 									type="text"
-									className=" mx-10"
+									className=" mr-10"
 									{...field}
 								/>
 							</FormControl>
@@ -131,7 +136,7 @@ const FetchIncomesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>) 
 																"type",
 																transactionType.name
 															);
-															setOpen(false)
+                                                            setOpen(false)
 														}}
 													>
 														{transactionType.name}
@@ -155,73 +160,31 @@ const FetchIncomesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>) 
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="date"
-					render={({ field }) => (
-						<FormItem>
-							<FormControl>
-								<Popover>
-									<PopoverTrigger asChild>
-										<Button
-											id="date"
-											variant={"outline"}
-											className={cn(
-												"w-[300px] justify-start text-left font-normal ml-20",
-												!field.value && "text-muted-foreground"
-											)}
-										>
-											<CalendarIcon className="mr-2 h-4 w-4" />
-											{field.value.from ? (
-												field.value.to ? (
-													<>
-														{format(
-															field.value.from,
-															"dd-MM-y"
-														)}{" "}
-														-{" "}
-														{format(
-															field.value.to,
-															"dd-MM-y"
-														)}
-													</>
-												) : (
-													format(
-														field.value.from,
-														"dd-MM-y"
-													)
-												)
-											) : (
-												<span>Wybierz przedział dat</span>
-											)}
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent
-										className="w-auto p-0"
-										align="start"
-									>
-										<Calendar
-											initialFocus
-											mode="range"
-											defaultMonth={field.value.from}
-											selected={field.value}
-											onSelect={field.onChange}
-											numberOfMonths={2}
-										/>
-									</PopoverContent>
-								</Popover>
-							</FormControl>
-							<FormMessage className="w-[80%] mx-auto" />
-						</FormItem>
-					)}
-				/>
+                <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <Input
+                                    placeholder="Kwota"
+                                    type="number"
+                                    className=" mx-10 arrow-none"
+                                    {...field}
+                                    onChange={event => field.onChange(parseFloat(event.target.value))}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 				</div>
 				<Button type="submit" className="mx-auto flex w-[80%] mt-8 mb-20 text-lg font-semibold py-6">
-					<Filter className="w-6 h-6 antialiased font-semibold mr-2" /> Filtruj
+					<PlusCircle className="w-6 h-6 antialiased font-semibold mr-2" /> Dodaj
 				</Button>
 			</form>
 		</Form>
 	);
 };
 
-export default FetchIncomesForm;
+export default AddExpenseForm;

@@ -17,5 +17,7 @@ export async function getTransactionIdTypeByName(name: string) {
         }
     });
 
+    if(!type) return 1
+
     return type?.id;
 }
