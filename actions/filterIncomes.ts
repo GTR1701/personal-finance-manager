@@ -5,7 +5,7 @@ import { prisma } from "@/prisma/prisma";
 import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
 
-type FilterExpenses = {
+type FilterIncomes = {
     name: string;
     type: string;
     date: {
@@ -14,7 +14,7 @@ type FilterExpenses = {
     };
 }
 
-export async function filterExpenses({ name, type, date}: FilterExpenses) {
+export async function FilterIncomes({ name, type, date}: FilterIncomes) {
     const queryFilters = {
         name,
         type
@@ -29,7 +29,7 @@ export async function filterExpenses({ name, type, date}: FilterExpenses) {
 
     const typeId = await getTransactionIdTypeByName(type);
 
-    const filteredData = await prisma.expenses.findMany({
+    const filteredData = await prisma.income.findMany({
         where: {
             name: {
                 contains: queryFilters.name
@@ -44,19 +44,19 @@ export async function filterExpenses({ name, type, date}: FilterExpenses) {
         }
     })
 
-    const normalisedFilteredData = filteredData.map((expense) => {
-        const formattedDate = format(expense.date, "dd-MM-yyyy");
+    const normalisedFilteredData = filteredData.map((income) => {
+        const formattedDate = format(income.date, "dd-MM-yyyy");
 
         return {
-            id: expense.id,
-            name: expense.name,
-            type: expense.types.name,
-            amount: expense.amount,
+            id: income.id,
+            name: income.name,
+            type: income.types.name,
+            amount: income.amount,
             date: formattedDate
         }
     })
 
-    revalidatePath("/dashboard/expenses");
+    revalidatePath("/dashboard/incomes");
 
     return normalisedFilteredData;
 }
