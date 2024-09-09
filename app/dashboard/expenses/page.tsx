@@ -1,19 +1,13 @@
-"use client"
-import { useUserStore } from "@/store/userStore";
-import { getCookie } from "cookies-next";
+"use server";
+import { getAllExpenses } from "@/data/getExpenses";
+import Expenses from "./Expenses";
+import { getAllTransactionTypes } from "@/data/getTransactionTypes";
 
-const Dashboard = () => {
-	const user = getCookie('currentUser');
-	const zustandUpdate = useUserStore((state) => state.setLoggedInUser);
-	zustandUpdate(user);
+const Dashboard = async () => {
+	const expenses = await getAllExpenses();
+	const types = await getAllTransactionTypes();
 
-	
-
-	return user && (
-		<div>
-			<h1>User: {user}</h1>
-		</div>
-	);
+	return <Expenses data={expenses} types={types} />;
 };
 
 export default Dashboard;
