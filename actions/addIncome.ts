@@ -1,9 +1,10 @@
 "use server"
 import { getTransactionIdTypeByName } from "@/data/getTransactionTypes";
 import { prisma } from "@/prisma/prisma";
-import { CreateTransaction, NormalisedTransaction } from "@/types/types";
+import { CreateTransaction } from "@/types/types";
+import { upsertBalance } from "./upsertBalance";
 
-export default async function createIncome(newIncome: CreateTransaction) {
+export default async function createIncome(newIncome: CreateTransaction, user: string) {
     const typeId = await getTransactionIdTypeByName(newIncome.type)
 
     await prisma.income.create({
@@ -15,4 +16,10 @@ export default async function createIncome(newIncome: CreateTransaction) {
             userId: newIncome.userId
         },
     });
+
+    await upsertBalance({
+        transaction: newIncome.amount,
+        type: 1,
+        user: user,
+    })
 }

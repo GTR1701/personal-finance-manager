@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { BounceLoader } from "react-spinners";
+import { BounceLoader, ScaleLoader } from "react-spinners";
 
 export default function DashboardLayout({
 	children,
@@ -102,7 +102,7 @@ export default function DashboardLayout({
 			</div>
 			<div className="w-[calc(100vw-308px)] h-[100vh]">
 				<Suspense
-					fallback={<BounceLoader className="w-[100%] h-[100vh] mx-auto my-[40vh]" color="#0d0df2" size={150} />}
+					fallback={<ScaleLoader className="w-fit h-[100vh] mx-auto my-[40vh]" color="#0d0df2"  />}
 				>
 					{children}
 				</Suspense>

@@ -29,3 +29,76 @@ export const getAllExpenses = cache(async () => {
 
     return normalisedExpenses
 })
+
+export const getCurrentMonthExpenses = cache(async (user: string) => {
+    const expenses = await prisma.expenses.findMany({
+        where: {
+            userId: user,
+            date: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            }
+        }
+    })
+
+    const sum = expenses.reduce((acc, expense) => acc + expense.amount, 0)
+
+    return sum
+})
+
+export const getCurrentMonthExpensesByType = cache(async (user: string) => {
+    const expenses = await prisma.expenses.findMany({
+        where: {
+            userId: user,
+            date: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            }
+        },
+        include: {
+            types: true
+        }
+    })
+
+    if (!expenses) {
+        return []
+    }
+
+    const sum = Object.entries(
+        expenses.reduce((acc, expense) => {
+            if (!acc[expense.types.name]) {
+                acc[expense.types.name] = 0;
+            }
+            acc[expense.types.name] += expense.amount;
+            return acc;
+        }, {} as Record<string, number>)
+    ).map(([name, value]) => ({ name, value }));
+
+    return sum
+})
+
+export const getCurrentMonthExpensesByDay = cache(async (user: string) => {
+    const expenses = await prisma.expenses.findMany({
+        where: {
+            userId: user,
+            date: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            }
+        }
+    })
+
+    const sum = Object.entries(
+        expenses.reduce((acc, expense) => {
+            if (!acc[expense.date.getDate()]) {
+                acc[expense.date.getDate()] = 0;
+            }
+            acc[expense.date.getDate()] += expense.amount;
+            return acc;
+        }, {} as Record<number, number>)
+    ).map(([name, amt]) => ({ name, amt }));
+
+    console.log(sum)
+
+    return sum
+})

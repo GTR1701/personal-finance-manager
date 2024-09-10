@@ -1,19 +1,8 @@
-"use client"
-import { useUserStore } from "@/store/userStore";
-import { getCookie } from "cookies-next";
+import Dashboard from "./Dashboard";
 
-const Dashboard = () => {
-	const user = getCookie('currentUser');
-	const zustandUpdate = useUserStore((state) => state.setLoggedInUser);
-	zustandUpdate(user);
-
-	
-
-	return user && (
-		<div>
-			<h1>User: {user}</h1>
-		</div>
-	);
-};
-
-export default Dashboard;
+const Page = async () => {
+    
+    return <Dashboard />;
+}
+ 
+export default Page;

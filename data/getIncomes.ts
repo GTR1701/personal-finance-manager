@@ -28,3 +28,19 @@ export const getAllIncomes = cache(async () => {
 
     return normalisedIncomes
 })
+
+export const getCurrentMonthIncomes = cache(async (user: string) => {
+    const incomes = await prisma.income.findMany({
+        where: {
+            userId: user,
+            date: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            }
+        }
+    })
+
+    const sum = incomes.reduce((acc, income) => acc + income.amount, 0)
+
+    return sum
+})

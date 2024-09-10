@@ -2,7 +2,7 @@
 
 import { getCookie } from "cookies-next";
 import { types } from "@prisma/client";
-import AddIncomeForm from "@/components/addIncomeForm";
+import AddIncomeForm from "@/components/AddIncomeForm";
 
 type Props = {
 	types: types[];
