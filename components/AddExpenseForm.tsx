@@ -49,18 +49,20 @@ const AddExpenseForm = ({
 	const onSubmit = async (data: z.infer<typeof AddExpenseFormSchema>) => {
 		console.log(data);
 		const createdAt = new Date();
+		const currentUser = user ? user.valueOf() : ''
+
 		const payload = {
 			name: data.name,
 			amount: data.amount,
 			type: data.type,
 			date: createdAt,
-			userId: user.valueOf(),
+			userId: currentUser,
 		};
 		await createExpense(payload);
 		await upsertBalance({
 			transaction: data.amount,
 			type: 2,
-			user: user.valueOf(),
+			user: currentUser,
 		}).then((e) => router.push("/dashboard/expenses"));
 	};
 

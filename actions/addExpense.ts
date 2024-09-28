@@ -2,6 +2,7 @@
 import { getTransactionIdTypeByName } from "@/data/getTransactionTypes";
 import { prisma } from "@/prisma/prisma";
 import { CreateTransaction } from "@/types/types";
+import { revalidatePath } from "next/cache";
 
 export default async function createExpense(newExpense: CreateTransaction) {
     const typeId = await getTransactionIdTypeByName(newExpense.type)
@@ -15,4 +16,10 @@ export default async function createExpense(newExpense: CreateTransaction) {
             userId: newExpense.userId
         },
     });
+
+    revalidatePath("/dashboard")
+    revalidatePath("/dashboard/expenses")
+    revalidatePath("/dashboard/expenses/new")
+    revalidatePath("/dashboard/incomes")
+    revalidatePath("/dashboard/incomes/new")
 }

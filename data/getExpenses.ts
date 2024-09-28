@@ -1,5 +1,6 @@
 "use server"
 
+import { round } from "@/lib/math"
 import { prisma } from "@/prisma/prisma"
 import { cache } from "react"
 
@@ -96,9 +97,7 @@ export const getCurrentMonthExpensesByDay = cache(async (user: string) => {
             acc[expense.date.getDate()] += expense.amount;
             return acc;
         }, {} as Record<number, number>)
-    ).map(([name, amt]) => ({ name, amt }));
-
-    console.log(sum)
+    ).map(([name, Wydatki]) => ({ name, 'Wydatki': round(Wydatki, "up", 2) }));
 
     return sum
 })

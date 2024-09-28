@@ -9,7 +9,7 @@ import {
 import { getCurrentMonthIncomes } from "@/data/getIncomes";
 import { useUserStore } from "@/store/userStore";
 import { getCookie } from "cookies-next";
-import { Bar, BarChart, Cell, Pie, PieChart, Rectangle, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Cell, Pie, PieChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
@@ -26,7 +26,7 @@ const Dashboard = () => {
 		{ name: string; value: number }[]
 	>([]);
 	const [expenseByDay, setExpenseByDay] = useState<
-		{ name: string; amt: number }[]
+		{ name: string; 'Wydatki': number }[]
 	>([]);
 
 
@@ -62,20 +62,20 @@ const Dashboard = () => {
 					<div>
 						<h1 className="mx-auto mb-5 text-4xl font-bold w-fit">Wydatki według dnia</h1>
 						<BarChart
-							width={1000}
+							width={800}
 							height={500}
 							data={expenseByDay}
 							className="mx-auto"
 							>
 								<XAxis dataKey="name" />
-								<YAxis dataKey="amt" />
-								<Bar dataKey="amt" fill="#1825ac" />
+								<YAxis dataKey="Wydatki" />
+								<Bar dataKey="Wydatki" fill="#1825ac" />
 							<Tooltip />
 							</BarChart>
 					</div>
 					<div>
 						<h1 className="mx-auto mb-5 text-4xl font-bold w-fit">Wydatki według typu</h1>
-						<PieChart width={500} height={500} className="mx-auto">
+						<PieChart width={700} height={500} className="mx-auto">
 							<Pie
 								dataKey="value"
 								data={expenseByType}

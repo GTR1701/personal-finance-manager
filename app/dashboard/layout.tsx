@@ -100,7 +100,7 @@ export default function DashboardLayout({
 					</AccordionItem>
 				</Accordion>
 			</div>
-			<div className="w-[calc(100vw-308px)] h-[100vh]">
+			<div className="w-[calc(100vw-308px)] h-[100vh] overflow-y-auto">
 				<Suspense
 					fallback={<ScaleLoader className="w-fit h-[100vh] mx-auto my-[40vh]" color="#0d0df2"  />}
 				>

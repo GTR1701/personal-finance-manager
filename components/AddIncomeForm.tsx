@@ -41,20 +41,21 @@ const AddIncomeForm = ({ transactionTypes }: Readonly<AddExpenseFormProps>) => {
 
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
-	const user = getCookie("currentUser");
+	const user = getCookie("currentUser")
 
 	const onSubmit = async (data: z.infer<typeof AddExpenseFormSchema>) => {
 		console.log(user);
 		const createdAt = new Date();
+		const currentUser = user ? user.valueOf() : ''
 		const payload = {
 			name: data.name,
 			amount: data.amount,
 			type: data.type,
 			date: createdAt,
-			userId: user.valueOf(),
+			userId: currentUser,
 		};
-		await createIncome(payload, user.valueOf());
-		router.push("/dashboard/expenses");
+		await createIncome(payload, currentUser);
+		router.push("/dashboard/incomes");
 	};
 
 	return (
