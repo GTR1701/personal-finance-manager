@@ -15,7 +15,6 @@ type FilterExpenses = {
 }
 
 export async function filterExpenses({ name, type, date }: FilterExpenses) {
-    console.log(name, type, date);
     const queryFilters: any = {};
     
     if (name) {
@@ -40,7 +39,6 @@ export async function filterExpenses({ name, type, date }: FilterExpenses) {
         };
     }
 
-    console.log(queryFilters);
 
     const filteredData = await prisma.expenses.findMany({
         where: queryFilters,

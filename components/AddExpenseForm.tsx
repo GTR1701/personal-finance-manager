@@ -47,7 +47,6 @@ const AddExpenseForm = ({
 	const user = getCookie("currentUser");
 
 	const onSubmit = async (data: z.infer<typeof AddExpenseFormSchema>) => {
-		console.log(data);
 		const createdAt = new Date();
 		const currentUser = user ? user.valueOf() : ''
 

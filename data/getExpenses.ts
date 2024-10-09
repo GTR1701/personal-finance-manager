@@ -100,7 +100,6 @@ export const getCurrentYearExpensesByMonth = cache(async (user: string) => {
         }, {} as Record<number, number>)
     ).map(([name, value]) => ({ name, 'Wydatki': round(value, "up", 2) }));
 
-    console.log(sum)
 
     return sum
 })

@@ -15,7 +15,6 @@ type FilterIncomes = {
 }
 
 export async function FilterIncomes({ name, type, date}: FilterIncomes) {
-    console.log(name, type, date);
     const queryFilters: any = {};
     
     if (name) {
@@ -39,8 +38,6 @@ export async function FilterIncomes({ name, type, date}: FilterIncomes) {
             lte: new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() + 1, 2)
         };
     }
-
-    console.log(queryFilters);
 
     const filteredData = await prisma.income.findMany({
         where: queryFilters,
