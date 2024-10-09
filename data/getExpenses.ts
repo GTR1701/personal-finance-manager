@@ -78,26 +78,29 @@ export const getCurrentMonthExpensesByType = cache(async (user: string) => {
     return sum
 })
 
-export const getCurrentMonthExpensesByDay = cache(async (user: string) => {
+export const getCurrentYearExpensesByMonth = cache(async (user: string) => {
     const expenses = await prisma.expenses.findMany({
         where: {
             userId: user,
             date: {
-                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-                lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+                gte: new Date(new Date().getFullYear(), 0, 1),
+                lte: new Date(new Date().getFullYear(), 11, 31)
             }
         }
     })
 
     const sum = Object.entries(
         expenses.reduce((acc, expense) => {
-            if (!acc[expense.date.getDate()]) {
-                acc[expense.date.getDate()] = 0;
+            const month = expense.date.getMonth() + 1;
+            if (!acc[month]) {
+                acc[month] = 0;
             }
-            acc[expense.date.getDate()] += expense.amount;
+            acc[month] += expense.amount;
             return acc;
         }, {} as Record<number, number>)
-    ).map(([name, Wydatki]) => ({ name, 'Wydatki': round(Wydatki, "up", 2) }));
+    ).map(([name, value]) => ({ name, 'Wydatki': round(value, "up", 2) }));
+
+    console.log(sum)
 
     return sum
 })

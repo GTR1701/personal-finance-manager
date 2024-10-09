@@ -3,7 +3,7 @@ import TransactionSummary from "@/components/TransactionSummary";
 import { getBalance } from "@/data/getBalance";
 import {
 	getCurrentMonthExpenses,
-	getCurrentMonthExpensesByDay,
+	getCurrentYearExpensesByMonth,
 	getCurrentMonthExpensesByType,
 } from "@/data/getExpenses";
 import { getCurrentMonthIncomes } from "@/data/getIncomes";
@@ -16,6 +16,7 @@ import {
 	Legend,
 	Pie,
 	PieChart,
+	ResponsiveContainer,
 	Tooltip,
 	XAxis,
 	YAxis,
@@ -27,7 +28,15 @@ const Dashboard = () => {
 	const zustandUpdate = useUserStore((state) => state.setLoggedInUser);
 	zustandUpdate(user);
 
-	const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#32a852", "#7932a8", "#d42f2f"];
+	const COLORS = [
+		"#0088FE",
+		"#00C49F",
+		"#FFBB28",
+		"#FF8042",
+		"#32a852",
+		"#7932a8",
+		"#d42f2f",
+	];
 
 	const RADIAN = Math.PI / 180;
 	const renderCustomizedLabel = ({
@@ -62,7 +71,7 @@ const Dashboard = () => {
 				// textAnchor={"end"}
 				// dominantBaseline="central"
 			>
-				{`${name}: ${(value).toFixed(0)}zł`}
+				{`${name}: ${value.toFixed(0)}zł`}
 			</text>
 		);
 	};
@@ -88,7 +97,7 @@ const Dashboard = () => {
 				await getCurrentMonthExpensesByType(user?.valueOf() as string)
 			);
 			setExpenseByDay(
-				await getCurrentMonthExpensesByDay(user?.valueOf() as string)
+				await getCurrentYearExpensesByMonth(user?.valueOf() as string)
 			);
 		};
 		getTransactionSummaries();
@@ -127,7 +136,7 @@ const Dashboard = () => {
 										fill={COLORS[index % COLORS.length]}
 									/>
 								))}
-							{/* <LabelList dataKey={"name"} offset={5} position="outside" className="font-extralight" /> */}
+								{/* <LabelList dataKey={"name"} offset={5} position="outside" className="font-extralight" /> */}
 							</Pie>
 							<Tooltip />
 							<Legend />
@@ -135,19 +144,19 @@ const Dashboard = () => {
 					</div>
 					<div>
 						<h1 className="mx-auto mb-5 text-4xl font-bold w-fit">
-							Wydatki według dnia
+							Wydatki Według Miesiąca
 						</h1>
-						<BarChart
-							width={800}
-							height={500}
-							data={expenseByDay}
-							className="mx-auto"
-						>
-							<XAxis dataKey="name" />
-							<YAxis dataKey="Wydatki" />
-							<Bar dataKey="Wydatki" fill="#1825ac" />
-							<Tooltip />
-						</BarChart>
+						<ResponsiveContainer width="90%" height={500} className="mx-auto">
+							<BarChart
+								data={expenseByDay}
+								className="mx-auto"
+							>
+								<XAxis dataKey="name" />
+								<YAxis dataKey="Wydatki" />
+								<Bar dataKey="Wydatki" fill="#1825ac" />
+								<Tooltip />
+							</BarChart>
+						</ResponsiveContainer>
 					</div>
 				</div>
 			</div>

@@ -43,8 +43,8 @@ const FetchIncomesForm = ({transactionTypes}: Readonly<FetchExpensesFormProps>) 
 			name: "",
 			type: "",
 			date: {
-                from: undefined,
-                to: undefined
+                from: new Date(),
+                to: new Date()
             },
 		},
 	});
