@@ -5,7 +5,6 @@ import { NormalisedTransaction } from "@/types/types";
 import { getCookie } from "cookies-next";
 import { types } from "@prisma/client";
 import { useDataTableStore } from "@/store/useDataTableStore";
-import { useEffect } from "react";
 import FetchIncomesForm from "@/components/FetchIncomesForm";
 import AddExpenseForm from "@/components/AddExpenseForm";
 

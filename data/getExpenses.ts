@@ -73,7 +73,7 @@ export const getCurrentMonthExpensesByType = cache(async (user: string) => {
             acc[expense.types.name] += expense.amount;
             return acc;
         }, {} as Record<string, number>)
-    ).map(([name, value]) => ({ name, value }));
+    ).map(([name, value]) => ({ name, 'value': round(value, "up", 2) }));
 
     return sum
 })
