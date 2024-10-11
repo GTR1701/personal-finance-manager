@@ -34,47 +34,9 @@ const Dashboard = () => {
 		"#FFBB28",
 		"#FF8042",
 		"#32a852",
-		"#7932a8",
 		"#d42f2f",
+		"#7932a8",
 	];
-
-	const RADIAN = Math.PI / 180;
-	const renderCustomizedLabel = ({
-		cx,
-		cy,
-		midAngle,
-		innerRadius,
-		outerRadius,
-		value,
-		name,
-		index,
-	}: {
-		cx: number;
-		cy: number;
-		midAngle: number;
-		innerRadius: number;
-		outerRadius: number;
-		value: number;
-		name: string;
-		index: number;
-	}) => {
-		const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-		const x = cx + radius * Math.cos(-midAngle * RADIAN);
-		const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-		return (
-			<text
-				x={x}
-				y={y}
-				fill="white"
-				className="font-extralight text-center"
-				// textAnchor={"end"}
-				// dominantBaseline="central"
-			>
-				{`${name}: ${value.toFixed(0)}zł`}
-			</text>
-		);
-	};
 
 	const [balance, setBalance] = useState(0);
 	const [income, setIncome] = useState(0);
