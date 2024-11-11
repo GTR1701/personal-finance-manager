@@ -1,32 +1,23 @@
 "use client";
 import TransactionSummary from "@/components/TransactionSummary";
-import { getBalance } from "@/data/getBalance";
-import {
-	getCurrentMonthExpenses,
-	getCurrentYearExpensesByMonth,
-	getCurrentMonthExpensesByType,
-} from "@/data/getExpenses";
-import { getCurrentMonthIncomes } from "@/data/getIncomes";
 import { useUserStore } from "@/store/userStore";
 import { getCookie } from "cookies-next";
-import {
-	Bar,
-	BarChart,
-	Cell,
-	Legend,
-	Pie,
-	PieChart,
-	ResponsiveContainer,
-	Tooltip,
-	XAxis,
-	YAxis,
-} from "recharts";
+import { Cell, Legend, Pie, PieChart, Tooltip } from "recharts";
 import { useEffect, useState } from "react";
+import { getMonthlyIncome, getMonthlyExpenses, getMonthlyExpensesByType } from "@/data/getMonthlyReport";
 
-const Dashboard = () => {
+type Props = {
+    year: number;
+    month: number;
+}
+
+const MonthlyReport = ({year, month}: Readonly<Props>) => {
 	const user = getCookie("currentUser");
 	const zustandUpdate = useUserStore((state) => state.setLoggedInUser);
 	zustandUpdate(user);
+
+    const date = new Date(year, month - 1, 1);
+    const monthName = date.toLocaleString('default', { month: 'long' });
 
 	const COLORS = [
 		"#0088FE",
@@ -49,22 +40,13 @@ const Dashboard = () => {
 	const [expenseByType, setExpenseByType] = useState<
 		{ name: string; value: number }[]
 	>([]);
-	const [expenseByDay, setExpenseByDay] = useState<
-		{ name: string; Wydatki: number }[]
-	>([]);
 
 	useEffect(() => {
 		const getTransactionSummaries = async () => {
-			setBalance(await getBalance(user?.valueOf() as string));
-			setExpense(
-				await getCurrentMonthExpenses(user?.valueOf() as string)
-			);
-			setIncome(await getCurrentMonthIncomes(user?.valueOf() as string));
+			setExpense(await getMonthlyExpenses(user?.valueOf() as string, year, month));
+			setIncome(await getMonthlyIncome(user?.valueOf() as string, year, month));
 			setExpenseByType(
-				await getCurrentMonthExpensesByType(user?.valueOf() as string)
-			);
-			setExpenseByDay(
-				await getCurrentYearExpensesByMonth(user?.valueOf() as string)
+				await getMonthlyExpensesByType(user?.valueOf() as string, year, month)
 			);
 		};
 		getTransactionSummaries();
@@ -73,7 +55,7 @@ const Dashboard = () => {
 	return (
 		user && (
 			<div className="">
-				<h1 className="m-20 text-4xl font-bold">Podsumowanie</h1>
+				<h1 className="mt-5 ml-20 mb-0 text-4xl font-bold">Raport na Miesiąc {monthName.charAt(0).toUpperCase() + monthName.slice(1)}</h1>
 				<div id="wykresy">
 					<TransactionSummary
 						balance={balance}
@@ -103,27 +85,10 @@ const Dashboard = () => {
 										fill={COLORS[index % COLORS.length]}
 									/>
 								))}
-								{/* <LabelList dataKey={"name"} offset={5} position="outside" className="font-extralight" /> */}
 							</Pie>
 							<Tooltip />
 							<Legend />
 						</PieChart>
-					</div>
-					<div>
-						<h1 className="mx-auto mb-5 text-4xl font-bold w-fit">
-							Wydatki Według Miesiąca
-						</h1>
-						<ResponsiveContainer width="90%" height={500} className="mx-auto">
-							<BarChart
-								data={expenseByDay}
-								className="mx-auto"
-							>
-								<XAxis dataKey="name" />
-								<YAxis dataKey="Wydatki" />
-								<Bar dataKey="Wydatki" fill="#1825ac" />
-								<Tooltip />
-							</BarChart>
-						</ResponsiveContainer>
 					</div>
 				</div>
 			</div>
@@ -131,4 +96,4 @@ const Dashboard = () => {
 	);
 };
 
-export default Dashboard;
+export default MonthlyReport;

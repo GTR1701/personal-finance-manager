@@ -43,10 +43,11 @@ model types {
 }
 
 model user {
-  id       String     @id
-  username String     @unique(map: "User_username_key")
-  password String
-  balance  Float     @default(0)
-  expenses expenses[]
-  income   income[]
+  id        String     @id
+  username  String     @unique(map: "User_username_key")
+  password  String
+  balance   Float      @default(0)
+  createdAt DateTime   @default(now()) @db.Date
+  expenses  expenses[]
+  income    income[]
 }

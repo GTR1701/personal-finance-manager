@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/prisma/prisma"
+import { revalidatePath } from "next/cache"
 
 type UpsertBalanceArgs = {
     transaction: number,
@@ -47,4 +48,10 @@ export const upsertBalance = async ({ transaction, type, user }: UpsertBalanceAr
         default:
             break;
     }
+
+    revalidatePath("/dashboard")
+    revalidatePath("/dashboard/expenses")
+    revalidatePath("/dashboard/expenses/new")
+    revalidatePath("/dashboard/incomes")
+    revalidatePath("/dashboard/incomes/new")
 }

@@ -8,6 +8,8 @@ import {
 import {
 	ArrowRight,
 	Calculator,
+	Calendar,
+	CalendarIcon,
 	Euro,
 	LayoutDashboard,
 	Minus,
@@ -71,7 +73,7 @@ export default function DashboardLayout({
 					</AccordionItem>
 				</Accordion>
 				<Accordion type="multiple" className="w-4/5 mx-auto">
-					<AccordionItem value="Expenses" className="border-b-0">
+					<AccordionItem value="Income" className="border-b-0">
 						<AccordionTrigger className="text-xl font-bold">
 							Przychody
 						</AccordionTrigger>
@@ -92,6 +94,24 @@ export default function DashboardLayout({
 									<Plus className="my-4 -ml-3 w-5 h-5 antialiased" />
 									<h1 className="text-md font-bold w-fit pt-4">
 										Nowy przychód
+									</h1>
+									<ArrowRight className="my-4 w-5 h-5 antialiased" />
+								</div>
+							</Link>
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
+				<Accordion type="multiple" className="w-4/5 mx-auto">
+					<AccordionItem value="Reports" className="border-b-0">
+						<AccordionTrigger className="text-xl font-bold">
+							Raporty
+						</AccordionTrigger>
+						<AccordionContent>
+							<Link href="/dashboard/reports">
+								<div className="flex flex-row gap-2 ml-3 selection:bg-none hover:text-primary transition w-max">
+									<Calendar className="my-4 w-5 h-5 antialiased" />
+									<h1 className="text-md font-bold w-fit pt-4">
+										Raporty Miesięczne
 									</h1>
 									<ArrowRight className="my-4 w-5 h-5 antialiased" />
 								</div>
