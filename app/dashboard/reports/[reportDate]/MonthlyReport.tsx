@@ -4,7 +4,7 @@ import { useUserStore } from "@/store/userStore";
 import { getCookie } from "cookies-next";
 import { Cell, Legend, Pie, PieChart, Tooltip } from "recharts";
 import { useEffect, useState } from "react";
-import { getMonthlyIncome, getMonthlyExpenses, getMonthlyExpensesByType } from "@/data/getMonthlyReport";
+import { getMonthlyIncome, getMonthlyExpenses, getMonthlyExpensesByType, getMonthlyBalance } from "@/data/getMonthlyReport";
 
 type Props = {
     year: number;
@@ -48,6 +48,7 @@ const MonthlyReport = ({year, month}: Readonly<Props>) => {
 			setExpenseByType(
 				await getMonthlyExpensesByType(user?.valueOf() as string, year, month)
 			);
+			setBalance(await getMonthlyBalance(user?.valueOf() as string, year, month));
 		};
 		getTransactionSummaries();
 	}, []);

@@ -84,3 +84,26 @@ export async function getMonthlyExpensesByType(user: string, year: number, month
 
     return expensesByType
 }
+
+export async function getMonthlyBalance(user: string, year: number, month: number) {
+    const balance = await prisma.monthlyBalance.findFirst({
+        where: {
+            userId: user,
+            AND: {
+                month: {
+                    gte: new Date(year, month - 1, 1, 2),
+                    lt: new Date(year, month, 1, 0, 59, 59, 999)
+                }
+            }
+        },
+        select: {
+            balance: true
+        }
+    })
+
+    if(!balance) {
+        return 0
+    }
+
+    return balance.balance
+}

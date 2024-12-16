@@ -50,4 +50,16 @@ model user {
   createdAt DateTime   @default(now()) @db.Date
   expenses  expenses[]
   income    income[]
+
+  monthlyBalance monthlyBalance[] @relation(map: "MonthlyBalance_userId_fkey")
+}
+
+model monthlyBalance {
+  id     Int      @id @default(autoincrement())
+  userId String
+  month  DateTime @default(now())
+  balance Float
+  user   user     @relation(fields: [userId], references: [id], map: "MonthlyBalance_userId_fkey")
+
+  @@index([userId], map: "MonthlyBalance_userId_fkey")
 }
