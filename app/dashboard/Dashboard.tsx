@@ -5,6 +5,7 @@ import {
 	getCurrentMonthExpenses,
 	getCurrentYearExpensesByMonth,
 	getCurrentMonthExpensesByType,
+	getAllMonthlyExpenses,
 } from "@/data/getExpenses";
 import { getCurrentMonthIncomes } from "@/data/getIncomes";
 import { useUserStore } from "@/store/userStore";
@@ -64,7 +65,7 @@ const Dashboard = () => {
 				await getCurrentMonthExpensesByType(user?.valueOf() as string)
 			);
 			setExpenseByDay(
-				await getCurrentYearExpensesByMonth(user?.valueOf() as string)
+				await getAllMonthlyExpenses(user?.valueOf() as string)
 			);
 		};
 		getTransactionSummaries();

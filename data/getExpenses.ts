@@ -103,3 +103,26 @@ export const getCurrentYearExpensesByMonth = cache(async (user: string) => {
 
     return sum
 })
+
+export const getAllMonthlyExpenses = cache(async (user: string) => {
+    const expenses = await prisma.expenses.findMany({
+        where: {
+            userId: user
+        }
+    })
+
+    const sum = Object.entries(
+        expenses.reduce((acc, expense) => {
+            const year = expense.date.getFullYear();
+            const month = expense.date.getMonth() + 1;
+            const key = `${year}-${month.toString().padStart(2, '0')}`;
+            if (!acc[key]) {
+                acc[key] = 0;
+            }
+            acc[key] += expense.amount;
+            return acc;
+        }, {} as Record<string, number>)
+    ).map(([name, value]) => ({ name, 'Wydatki': round(value, "up", 2) }));
+
+    return sum
+})
